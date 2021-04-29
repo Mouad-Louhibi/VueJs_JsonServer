@@ -1,7 +1,7 @@
 <template>
   <main class="flex-shrink-0">
     <div class="container">
-      {{ $t("message", { name: "Mouad" }) }}
+      Message Here
       <form @submit.prevent="handleForm()">
         <div class="mb-3">
           <label for="name" class="form-label">name</label>
@@ -51,7 +51,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(contact, i) in contacts" :key="i">
+          <tr v-for="contact in contacts" :key="contact.id">
             <th scope="row">{{ contact._id }}</th>
             <td>{{ contact.name }}</td>
             <td>{{ contact.email }}</td>
@@ -59,7 +59,7 @@
             <td>
               <button
                 type="button"
-                @click="editContact(contact._id)"
+                @click="editContact(contact.id)"
                 class="btn btn-warning"
               >
                 Edit
@@ -68,7 +68,7 @@
             <td>
               <button
                 type="button"
-                @click="deleteContact(contact._id)"
+                @click="deleteContact(contact.id)"
                 class="btn btn-danger"
               >
                 Delete
@@ -84,6 +84,8 @@
   </main>
 </template>
 <script>
+import axios from "axios";
+
 export default {
   name: "Home",
 
@@ -91,7 +93,7 @@ export default {
     return {
       isEdit: false,
       formData: {
-        _id: null,
+        id: null,
         name: "",
         email: "",
         address: "",
@@ -104,17 +106,28 @@ export default {
       },
     };
   },
+
+  async created(){
+    try {
+      const res = await axios.get('http://localhost:3000/users');
+
+      this.contacts = res.data;
+    } catch(e){
+      console.error(e);
+    }
+  },
+
   methods: {
     handleForm: function () {
       console.log(this.formData);
       if (this.isEdit) {
         for (var i = 0; i < this.contacts.length; i++) {
-          if (this.contacts[i]._id === this.formData._id) {
+          if (this.contacts[i].id === this.formData.id) {
             this.contacts[i] = this.formData;
           }
         }
       } else {
-        this.formData._id = this.contacts.length + 1;
+        this.formData.id = this.contacts.length + 1;
 
         this.contacts.push(this.formData);
       }
@@ -129,7 +142,7 @@ export default {
 
     editContact: function (id) {
       for (var i = 0; i < this.contacts.length; i++) {
-        if (this.contacts[i]._id === id) {
+        if (this.contacts[i].id === id) {
           this.formData = this.contacts[i];
           this.isEdit = true;
         }
@@ -138,7 +151,7 @@ export default {
     },
     deleteContact: function (id) {
       for (var i = 0; i < this.contacts.length; i++) {
-        if (this.contacts[i]._id === id) {
+        if (this.contacts[i].id === id) {
           this.contacts.splice(i, 1);
           i--;
         }

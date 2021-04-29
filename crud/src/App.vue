@@ -18,7 +18,7 @@ export default {
   name: "App",
   data: function () {
     return {
-     user:{}
+      users: []
     };
   },
   components: {
