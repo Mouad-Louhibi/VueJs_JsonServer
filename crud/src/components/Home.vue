@@ -52,7 +52,7 @@
         </thead>
         <tbody>
           <tr v-for="(contact, i) in contacts" :key="i">
-            <th scope="row">{{ contact._id }} {{ i }}</th>
+            <th scope="row">{{ contact._id }}</th>
             <td>{{ contact.name }}</td>
             <td>{{ contact.email }}</td>
             <td>{{ contact.address }}</td>

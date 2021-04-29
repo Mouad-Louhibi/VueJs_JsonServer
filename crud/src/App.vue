@@ -1,9 +1,9 @@
 <template>
   <div class="d-flex flex-column h-100">
-    <Header />
+    <Header title="FrontEnd Training VueJS"/>
 
     <!-- Begin page content -->
-    <router-link />
+    <router-view />
 
     <Footer />
   </div>
@@ -18,7 +18,7 @@ export default {
   name: "App",
   data: function () {
     return {
-      user: null,
+     user:{}
     };
   },
   components: {
