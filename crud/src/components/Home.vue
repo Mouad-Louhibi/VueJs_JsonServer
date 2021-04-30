@@ -2,13 +2,13 @@
   <main class="flex-shrink-0">
     <div class="container">
       Message Here
-      <form @submit.prevent="handleForm()">
+      <form @submit.prevent="addUser()">
         <div class="mb-3">
           <label for="name" class="form-label">name</label>
           <input
             type="text"
             class="form-control"
-            id="name"
+            id="name" 
             placeholder="name"
             v-model="formData.name"
           />
@@ -33,9 +33,7 @@
           ></textarea>
         </div>
         <div class="mb-3">
-          <button v-if="!isEdit" type="submit" class="btn btn-primary">
-            Save
-          </button>
+          <button v-if="!isEdit" type="submit" class="btn btn-primary">Save</button>
           <button v-else type="submit" class="btn btn-warning">Edit</button>
         </div>
       </form>
@@ -51,15 +49,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="contact in contacts" :key="contact.id">
-            <th scope="row">{{ contact._id }}</th>
-            <td>{{ contact.name }}</td>
-            <td>{{ contact.email }}</td>
-            <td>{{ contact.address }}</td>
+          <tr v-for="user in users" :key="user.id">
+            <th scope="row">{{ user.id }}</th>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.address }}</td>
             <td>
               <button
                 type="button"
-                @click="editContact(contact.id)"
+                @click="editUser(user.id)"
                 class="btn btn-warning"
               >
                 Edit
@@ -68,14 +66,14 @@
             <td>
               <button
                 type="button"
-                @click="deleteContact(contact.id)"
+                @click="deleteUser(user.id)"
                 class="btn btn-danger"
               >
                 Delete
               </button>
             </td>
           </tr>
-          <tr v-if="contacts.length == 0">
+          <tr v-if="users.length == 0">
             <td colspan="5">NO DATA</td>
           </tr>
         </tbody>
@@ -85,6 +83,8 @@
 </template>
 <script>
 import axios from "axios";
+
+const baseURL = 'http://localhost:3000/users';
 
 export default {
   name: "Home",
@@ -98,38 +98,50 @@ export default {
         email: "",
         address: "",
       },
-      contacts: [],
-      variable: "",
-      user: {
-        name: "Mouad",
-        city: "Fes",
-      },
+      users: [],
+      userId: 15
     };
   },
 
   async created(){
     try {
-      const res = await axios.get('http://localhost:3000/users');
+      const res = await axios.get(baseURL);
 
-      this.contacts = res.data;
+      this.users = res.data;
     } catch(e){
       console.error(e);
     }
   },
 
   methods: {
+
+    async addUser(){
+      try {
+        const response = await axios.post(baseURL, {id: this.userId})
+        this.users = [...this.users, response.data]
+      } catch(e){
+        console.error(e);
+      }
+    },
+/*
+    async deleteUser(id){
+      
+      const res = await axios.delete(baseURL + {id: id})
+      this.users = [...this.formData, res.data]
+    },
+
     handleForm: function () {
       console.log(this.formData);
       if (this.isEdit) {
-        for (var i = 0; i < this.contacts.length; i++) {
-          if (this.contacts[i].id === this.formData.id) {
-            this.contacts[i] = this.formData;
+        for (var i = 0; i < this.users.length; i++) {
+          if (this.users[i].id === this.formData.id) {
+            this.users[i] = this.formData;
           }
         }
       } else {
-        this.formData.id = this.contacts.length + 1;
+        this.formData.id = this.users.length + 1;
 
-        this.contacts.push(this.formData);
+        this.users.push(this.formData);
       }
       this.formData = {
         name: "",
@@ -137,27 +149,29 @@ export default {
         address: "",
       };
       this.isEdit = false;
-      console.log(this.contacts);
+      console.log(this.users);
     },
 
-    editContact: function (id) {
-      for (var i = 0; i < this.contacts.length; i++) {
-        if (this.contacts[i].id === id) {
-          this.formData = this.contacts[i];
+    editUser: function (id) {
+      for (var i = 0; i < this.users.length; i++) {
+        if (this.users[i].id === id) {
+          this.formData = this.users[i];
           this.isEdit = true;
         }
       }
       console.log(id);
     },
-    deleteContact: function (id) {
-      for (var i = 0; i < this.contacts.length; i++) {
-        if (this.contacts[i].id === id) {
-          this.contacts.splice(i, 1);
+    */
+    deleteUser: function (id) {
+      for (var i = 0; i < this.users.length; i++) {
+        if (this.users[i].id === id) {
+          this.users.splice(i, 1);
           i--;
         }
       }
-      console.log(this.contacts);
+      console.log(this.users);
     },
+    
   },
 };
 </script>
