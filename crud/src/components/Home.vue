@@ -66,7 +66,7 @@
             <td>
               <button
                 type="button"
-                @click="deleteUser(user.id)"
+                @click="deleteUser1(user.id)"
                 class="btn btn-danger"
               >
                 Delete
@@ -98,8 +98,7 @@ export default {
         email: "",
         address: "",
       },
-      users: [],
-      userId: 15
+      users: []
     };
   },
 
@@ -116,19 +115,24 @@ export default {
   methods: {
 
     async addUser(){
+      console.log(this.formData)
+      for (var i = 0; i < this.users.length; i++);
+      this.formData.id = i++
 
-      for (var i = 0; i < this.contacts.length; i++) {
-        if (this.contacts[i]._id === id) {
-            this.formData = this.contacts[i]
-          }
-        }
-        this.formData._id = this.contacts.length + 1;
-      try {
-        const response = await axios.post(baseURL, {id: this.userId})
-        this.users = [...this.users, response.data]
-      } catch(e){
-        console.error(e);
-      }
+      this.editUser1(this.formData.id)
+        
+      axios.post(baseURL, this.formData)
+        .then(response => this.formData.id = response.data.id)
+        .catch(error => {
+          this.errorMessage = error.message;
+          console.error("There was an error!", error);
+      });
+    },
+
+    deleteUser: async function(id) {
+      console.error(id);
+      await axios.delete(baseURL + ""+id+"")
+      console.log(this.users);
     },
 /*
     async deleteUser(id){
@@ -158,8 +162,8 @@ export default {
       this.isEdit = false;
       console.log(this.users);
     },
-
-    editUser: function (id) {
+*/
+    editUser1: function (id) {
       for (var i = 0; i < this.users.length; i++) {
         if (this.users[i].id === id) {
           this.formData = this.users[i];
@@ -168,8 +172,8 @@ export default {
       }
       console.log(id);
     },
-    */
-    deleteUser: function (id) {
+    
+    deleteUser1: function (id) {
       for (var i = 0; i < this.users.length; i++) {
         if (this.users[i].id === id) {
           this.users.splice(i, 1);
