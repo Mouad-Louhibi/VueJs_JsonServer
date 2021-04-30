@@ -116,6 +116,13 @@ export default {
   methods: {
 
     async addUser(){
+
+      for (var i = 0; i < this.contacts.length; i++) {
+        if (this.contacts[i]._id === id) {
+            this.formData = this.contacts[i]
+          }
+        }
+        this.formData._id = this.contacts.length + 1;
       try {
         const response = await axios.post(baseURL, {id: this.userId})
         this.users = [...this.users, response.data]
